@@ -38,13 +38,6 @@
             </div>
         </div>
     </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2018 - Assignment2</p>
-        </footer>
-    </div>
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -68,5 +61,13 @@
     </environment>
 
     @RenderSection("Scripts", required: false)
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; 2018 - Assignment2</p>
+        </footer>
+    </div>
 </body>
 </html>

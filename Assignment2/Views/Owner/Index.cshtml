@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewData["Title"] = "Owner Dashboard";
+}
+
+<h2>Owner Dashboard</h2>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm" }))
+{
+    @Html.AntiForgeryToken()
+}
+
+
+<div id="myDiv" data-url="@Url.Action("Inventory", "Owner")">
+    Click me to send an AJAX request to a controller action
+    decorated with the [ValidateAntiForgeryToken] attribute
+</div>
+
+<div id="userBody"></div>
+
+<script type="text/javascript">
+    AddAntiForgeryToken = function (data) {
+        data.__RequestVerificationToken = $('#__AjaxAntiForgeryForm input[name=__RequestVerificationToken]').val();
+        return data;
+    };
+
+    var token = $('[name=__RequestVerificationToken]').val();
+    var headers = {};
+    headers["__RequestVerificationToken"] = token;
+
+    //$.ajax({
+    //    type: 'GET',
+    //    url: '/Owner/Inventory',
+    //    cache: false,
+    //    headers: headers,
+    //    contentType: 'application/json; charset=utf-8',
+    //    data: '',
+    //    success: function (response) {
+    //        document.getElementById("userBody").innerHTML = response;
+    //    },
+    //    error: function (error) {
+    //        console.log(error);
+    //    }
+    //});
+
+    $('#myDiv').click(function () {
+        var form = $('#__AjaxAntiForgeryForm');
+        var token = $('input[name="__RequestVerificationToken"]', form).val();
+        $.ajax({
+            url: $(this).data('url'),
+            type: 'PATCH',
+            data: {
+                __RequestVerificationToken: token,
+                request: 'some value'
+            },
+            success: function (response) {
+                document.getElementById("userBody").innerHTML = response;
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+        return false;
+    });
+</script>

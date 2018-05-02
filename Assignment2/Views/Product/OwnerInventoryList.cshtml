@@ -1,0 +1,11 @@
+﻿@{
+    Layout = "";
+}
+@model IEnumerable<Assignment2.Models.OwnerViewModels.OwnerInventoryViewModel>
+
+@foreach (var item in Model)
+{
+    <li>@item.ProductID</li>
+    <li>@item.ProductName</li>
+    <li>@item.StockLevel</li>
+}
