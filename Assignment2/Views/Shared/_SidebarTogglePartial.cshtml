@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Assignment2.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{string active = "";}
+
+@if (SignInManager.IsSignedIn(User))
+{
+    active = "";
+}
+else
+{
+    active = "active";
+}
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="navbar-header">
+        <button type="button" id="sidebarCollapse" class="navbar-btn @active">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+}
+else
+{
+
+}

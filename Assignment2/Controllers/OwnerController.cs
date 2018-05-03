@@ -33,7 +33,12 @@ namespace Assignment2.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            //return View("~/Views/Dashboard/OwnerDashboard.cshtml");
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Sidebar()
+        {
             return View();
         }
 

@@ -17,8 +17,13 @@
     </environment>
 </head>
 <body>
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm" }))
+    {
+        @Html.AntiForgeryToken()
+    }
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
+            @await Html.PartialAsync("_SidebarTogglePartial")
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
@@ -29,11 +34,11 @@
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Assignment2</a>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
+                <!--<ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                </ul>
+                </ul>-->
                 @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
@@ -62,12 +67,18 @@
 
     @RenderSection("Scripts", required: false)
 
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2018 - Assignment2</p>
-        </footer>
+    
+
+    <div class="wrapper">
+        @await Html.PartialAsync("_Sidebar")
+
+        <div class="container body-content">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; 2018 - Assignment2</p>
+            </footer>
+        </div>
     </div>
 </body>
 </html>
