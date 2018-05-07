@@ -1,0 +1,30 @@
+﻿
+@using Assignment2.Models.DataModel
+@model IEnumerable<StoreInventory>
+@{
+    ViewData["Title"] = "Inventory";
+
+}
+
+<h2>Store Inventory - Melbourne CBD</h2>
+
+<table>
+    <thead>
+        <tr>
+        <th>@nameof(StoreInventory.ProductID)</th>
+        <th>@nameof(Product.Name)</th>
+        <th>@nameof(StoreInventory.StockLevel)</th>
+        <tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>@item.ProductID</td>
+        <td>@item.Product.Name</td>
+        <td>@item.StockLevel</td>
+    </tr>
+
+    }
+    </tbody>
+</table>

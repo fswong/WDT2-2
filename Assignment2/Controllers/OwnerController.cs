@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Assignment2.Data;
 using Assignment2.Extensions.DataExtensions;
+using Assignment2.Models.DataModel;
 using Assignment2.Models.OwnerViewModels;
 using Assignment2.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Assignment2.Controllers
 {
@@ -42,6 +44,10 @@ namespace Assignment2.Controllers
             return View();
         }
 
+        /// <summary>
+        /// used to view owner inventory
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Inventory() {
             var inventory = new OwnerInventoryRepository(_context).GetOwnerInventoryList();
@@ -53,29 +59,87 @@ namespace Assignment2.Controllers
             return View("~/Views/Product/OwnerInventoryList.cshtml", response);
         }
 
+        /// <summary>
+        /// used to set stock owner inventory
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPatch]
         [ValidateAntiForgeryToken]
-        public IActionResult Inventory(string request)
+        public IActionResult Inventory(int id, OwnerInventory data)
         {
-            var inventory = new OwnerInventoryRepository(_context).GetOwnerInventoryList();
-            var response = new List<OwnerInventoryViewModel>();
+            try {
+                //validate post
+                if (id != data.ProductID) {
+                    throw new Exception("Invalid product id provided");
+                }
 
-            foreach (var item in inventory)
-            {
-                response.Add(item.ToViewModel(_context));
+                _context.Update(data);
+                _context.SaveChanges();
+
+                var response = _context.OwnerInventories.Include(oi => oi.Product).ToList();
+
+                return View("~/Views/Product/OwnerInventoryList.cshtml", response);
             }
-            return View("~/Views/Product/OwnerInventoryList.cshtml", response);
+            catch (Exception e) {
+                ViewBag.ErrorMsg = e.Message;
+                return View("~/Views/Common/Error.cshtml");
+            }
         }
 
+        /// <summary>
+        /// used to get stock request
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult StockRequest() {
-            return View();
+            var model = _context.StockRequests.Include(s => s.Product).Include(s => s.Store).ToList();
+            return View(model);
         }
 
+        /// <summary>
+        /// used to fulfil stock request
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpDelete]
-        public IActionResult StockRequest(OwnerInventoryViewModel request)
+        [ValidateAntiForgeryToken]
+        public IActionResult StockRequest(int id)
         {
-            return View();
+            try {
+                var stockRequest = _context.StockRequests.Where(sr => sr.StockRequestID == id).First();
+                var ownerInventory = _context.OwnerInventories.Where(oi => oi.ProductID == stockRequest.ProductID).First();
+
+                if (ownerInventory.StockLevel >= stockRequest.Quantity)
+                {
+                    var changeAmount = stockRequest.Quantity;
+
+                    // reduce stock level
+                    ownerInventory.StockLevel -= changeAmount;
+                    _context.Update(ownerInventory);
+
+                    // add the stock
+                    var storeInventory = _context.StoreInventories
+                        .Where(si => si.StoreID == stockRequest.StoreID)
+                        .Where(si => si.ProductID == stockRequest.ProductID).First();
+
+                    storeInventory.StockLevel += changeAmount;
+                    _context.Update(storeInventory);
+
+                    // delete the request
+                    _context.Remove(stockRequest);
+                    _context.SaveChanges();
+
+                    var model = _context.StockRequests.Include(s => s.Product).Include(s => s.Store).ToList();
+                    return View(model);
+                }
+                else {
+                    throw new Exception("Insufficient stock to process your order");
+                }
+            } catch (Exception e) {
+                ViewBag.ErrorMsg = e.Message;
+                return View("~/Views/Common/Error.cshtml");
+            }
         }
     }
 }

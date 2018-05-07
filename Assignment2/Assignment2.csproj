@@ -23,7 +23,6 @@
     <Folder Include="Models\StockRequestViewModels\" />
     <Folder Include="Models\StoreViewModels\" />
     <Folder Include="Views\Customer\" />
-    <Folder Include="Views\FranchiseHolder\" />
     <Folder Include="Views\Store\" />
   </ItemGroup>
 

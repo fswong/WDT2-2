@@ -59,6 +59,20 @@ namespace Assignment2.Repository
                 throw e;
             }
         }
+
+        public List<StoreInventory> GetStoreInventory(int StoreID) {
+            try
+            {
+                List<StoreInventory> response = null;
+                response = _context.StoreInventories.Where(s => s.StoreID == StoreID).ToList();
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
         #endregion
     }
 }
