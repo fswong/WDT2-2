@@ -28,6 +28,7 @@ namespace Assignment2.Controllers
         }
         #endregion
 
+        #region common
         /// <summary>
         /// landing page for the spa
         /// </summary>
@@ -43,6 +44,7 @@ namespace Assignment2.Controllers
         {
             return View();
         }
+        #endregion
 
         /// <summary>
         /// used to view owner inventory
@@ -50,13 +52,26 @@ namespace Assignment2.Controllers
         /// <returns></returns>
         [HttpGet]
         public IActionResult Inventory() {
-            var inventory = new OwnerInventoryRepository(_context).GetOwnerInventoryList();
-            var response = new List<OwnerInventoryViewModel>();
+            var model = _context.OwnerInventories.Include(oi => oi.Product).ToList();
+            return View(model);
+        }
 
-            foreach (var item in inventory) {
-                response.Add(item.ToViewModel(_context));
+        /// <summary>
+        /// returns the edit form
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public IActionResult Inventory(int id)
+        {
+            try {
+                var model = _context.OwnerInventories.Include(oi => oi.Product).Where(s => s.ProductID == id).First();
+                return View("Forms/Inventory", model);
             }
-            return View("~/Views/Product/OwnerInventoryList.cshtml", response);
+            catch (Exception e) {
+                ViewBag.ErrorMsg = e.Message;
+                return View("~/Views/Common/Error.cshtml");
+            }
         }
 
         /// <summary>

@@ -18,10 +18,20 @@
         var headers = {};
         headers["__RequestVerificationToken"] = token;
 
-        var GetOwnerInventory = function () {
+        // get has 2 types, one where he knows the id of the object and the other if he is uncertain
+        var Get = function (controller, method, id) {
+            var url = '';
+            if (id == undefined) {
+                url = '/' + controller + '/' + method;
+            } else { 
+                url = '/' + controller + '/' + method + '/' + id;
+            }
+
+            console.log(url);
+
             $.ajax({
                 type: 'GET',
-                url: '/Owner/Inventory',
+                url: url,
                 cache: false,
                 headers: headers,
                 contentType: 'application/json; charset=utf-8',
@@ -35,7 +45,8 @@
             });
         };
 
-        var PatchOwnerInventory = function () {
+        // patch 
+        var Patch = function (controller, method, form) {
             var form = $('#__AjaxAntiForgeryForm');
             var token = $('input[name="__RequestVerificationToken"]', form).val();
             $.ajax({
@@ -43,7 +54,28 @@
                 type: 'PATCH',
                 data: {
                     __RequestVerificationToken: token,
-                    request: 'some value'
+                    //data: data
+                    data: $(form).serialise()
+                },
+                success: function (response) {
+                    document.getElementById("userBody").innerHTML = response;
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+            return false;
+        };
+
+        var Post = function (controller, method) {
+            var form = $('#__AjaxAntiForgeryForm');
+            var token = $('input[name="__RequestVerificationToken"]', form).val();
+            $.ajax({
+                url: $(this).data('url'),
+                type: 'PATCH',
+                data: {
+                    __RequestVerificationToken: token,
+                    data: data
                 },
                 success: function (response) {
                     document.getElementById("userBody").innerHTML = response;

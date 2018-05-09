@@ -8,6 +8,7 @@
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    min-height: 100vh;
 }
 
 /* Carousel */
@@ -60,10 +61,10 @@
     transform: rotateY(100deg);
 }
 
-    #sidebar .sidebar-header {
-        padding: 20px;
-        background: #666e7a;
-    }
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: #666e7a;
+}
 
 #sidebar ul.components {
     padding: 20px 0;
@@ -224,3 +225,7 @@ margin: 5px auto;
     transform: rotate(-45deg) translate(1px, -1px);
 }
 }
+
+/*
+
+*/
