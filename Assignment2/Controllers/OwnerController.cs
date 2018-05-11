@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Assignment2.Data;
-using Assignment2.Extensions.DataExtensions;
 using Assignment2.Models.DataModel;
-using Assignment2.Models.OwnerViewModels;
 using Assignment2.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Assignment2.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = Constants.OwnerRole)]
     [Route("[controller]/[action]")]
     public class OwnerController : Controller
     {

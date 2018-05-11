@@ -45,8 +45,8 @@ namespace Assignment2.Data
             var userManager = serviceProvider.GetService<UserManager<ApplicationUser>>();
 
             await EnsureUserHasRole(userManager, "retail@example.com", Constants.CustomerRole);
-            await EnsureUserHasRole(userManager, "wholesale@example.com", Constants.FranchiseHolderRole);
-            await EnsureUserHasRole(userManager, "s3593297@student.rmit.edu.au", Constants.OwnerRole);
+            await EnsureUserHasRole(userManager, "owner@example.com", Constants.OwnerRole);
+            await EnsureUserHasRole(userManager, "s3593297@student.rmit.edu.au", Constants.FranchiseHolderRole);
         }
 
         public static void SeedApplication(IServiceProvider serviceProvider) {

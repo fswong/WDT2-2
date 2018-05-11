@@ -27,6 +27,17 @@
     margin: 15px;
 }
 
+/*popup*/
+.popup {
+    background-color: white;
+    padding: 10px;
+    /*padding-top: 25px;
+    padding-right: 25px;
+    padding-bottom: 25px;
+    padding-left: 25px;*/
+    border-radius: 15px;
+}
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */
@@ -181,9 +192,9 @@ a.article, a.article:hover {
 
 
 #sidebarCollapse.active span {
-transform: none;
-opacity: 1;
-margin: 5px auto;
+    transform: none;
+    opacity: 1;
+    margin: 5px auto;
 }
 
 

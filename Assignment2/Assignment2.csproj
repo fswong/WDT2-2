@@ -20,9 +20,8 @@
 
   <ItemGroup>
     <Folder Include="Common\Constants\" />
-    <Folder Include="Models\StockRequestViewModels\" />
-    <Folder Include="Models\StoreViewModels\" />
-    <Folder Include="Views\Customer\" />
+    <Folder Include="Views\Customer\Forms\" />
+    <Folder Include="Views\FranchiseHolder\Forms\" />
     <Folder Include="Views\Store\" />
   </ItemGroup>
 

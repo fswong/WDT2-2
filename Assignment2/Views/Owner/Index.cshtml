@@ -6,9 +6,52 @@
 {
     <h2>Owner Dashboard</h2>
 
-    <div id="userBody"></div>
+    <div id="user_body"></div>
+    <div id="popup_form" class="popup">
+        <form id="ajax_form">
+            <div id="form_body"></div>
+            <div class="form-group">
+                <button onclick="validate()" class="btn btn-default">Save</button>
+            </div>
+        </form>
+    </div>
 
     <script type="text/javascript">
+        $('#popup_from').popup({
+            blur: false,
+            opacity: 0.3,
+            transition: 'all 0.3s'
+        });
+
+        var validate = function () {
+            $('#ajax_form').val(blockSubmit());
+            return false;
+        }
+
+        var blockSubmit = function () { 
+            alert('blocking');
+            return false;
+        }
+
+        //$(document).on('submit', 'form.ajax_form', function () {
+        //    alert($(this).attr('action') + '/' + $(this).attr('method'));
+        //    $.ajax({
+        //        url: $(this).attr('action'),
+        //        type: $(this).attr('method'),
+        //        dataType: 'json',
+        //        data: $(this).serialize(),
+        //        success: function (data) {
+        //            alert('Submitted');
+        //        },
+        //        error: function (xhr, err) {
+        //            alert('Error');
+        //        }
+        //    });
+        //    return false;
+        //});
+
+        
+
         AddAntiForgeryToken = function (data) {
             data.__RequestVerificationToken = $('#__AjaxAntiForgeryForm input[name=__RequestVerificationToken]').val();
             return data;
@@ -23,7 +66,7 @@
             var url = '';
             if (id == undefined) {
                 url = '/' + controller + '/' + method;
-            } else { 
+            } else {
                 url = '/' + controller + '/' + method + '/' + id;
             }
 
@@ -37,7 +80,8 @@
                 contentType: 'application/json; charset=utf-8',
                 data: '',
                 success: function (response) {
-                    document.getElementById("userBody").innerHTML = response;
+                    console.log(response);
+                    document.getElementById("user_body").innerHTML = response;
                 },
                 error: function (error) {
                     console.log(error);
@@ -45,7 +89,37 @@
             });
         };
 
-        // patch 
+        var GetForm = function (controller, method, id, action, type) {
+            var url = '';
+            if (id == undefined) {
+                url = '/' + controller + '/' + method;
+            } else {
+                url = '/' + controller + '/' + method + '/' + id;
+            }
+
+            console.log(url);
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                cache: false,
+                headers: headers,
+                contentType: 'application/json; charset=utf-8',
+                data: '',
+                success: function (response) {
+                    console.log(response);
+                    document.getElementById("form_body").innerHTML = response;
+                    $("#ajax_form").attr("action", action);
+                    $("#ajax_form").attr("method", type);
+                    $('#popup_form').popup('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        };
+
+        // patch
         var Patch = function (controller, method, form) {
             var form = $('#__AjaxAntiForgeryForm');
             var token = $('input[name="__RequestVerificationToken"]', form).val();
@@ -58,7 +132,7 @@
                     data: $(form).serialise()
                 },
                 success: function (response) {
-                    document.getElementById("userBody").innerHTML = response;
+                    document.getElementById("user_body").innerHTML = response;
                 },
                 error: function (error) {
                     console.log(error);
@@ -78,7 +152,7 @@
                     data: data
                 },
                 success: function (response) {
-                    document.getElementById("userBody").innerHTML = response;
+                    document.getElementById("user_body").innerHTML = response;
                 },
                 error: function (error) {
                     console.log(error);

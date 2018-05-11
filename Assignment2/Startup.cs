@@ -69,6 +69,7 @@ namespace Assignment2
             );
 
             services.AddMvc();
+            services.AddTransient<UserManager<ApplicationUser>>();
 
             services.AddDistributedMemoryCache();
             services.AddSession();

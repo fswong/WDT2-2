@@ -20,7 +20,7 @@ namespace Assignment2.Controllers
             }
             else if (User.IsInRole(Constants.FranchiseHolderRole))
             {
-                return RedirectToAction("Index", "FranchiseHolder");
+                return RedirectToAction("Inventory", "FranchiseHolder");
             }
             else if (User.IsInRole(Constants.OwnerRole))
             {

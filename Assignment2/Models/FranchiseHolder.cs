@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Assignment2.Models
 {
-    public class StoreInventoryViewModel
+    public class FranchiseHolder
     {
-        public Store store { get; set; }
+        int StoreID { get; set; }
+        string Id { get; set; } // this is the user id
 
-        public List<StoreInventory> items { get; set; }
+        public virtual Store Store { get; set; }
     }
 }
