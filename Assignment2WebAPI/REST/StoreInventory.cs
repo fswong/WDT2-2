@@ -4,24 +4,27 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
-namespace Assignment2.Models.DataModel
+namespace Assignment2WebAPI.REST
 {
     [DataContract]
-    public partial class StoreInventory
+    public class StoreInventory
     {
         [DataMember]
         public int StoreID { get; set; }
 
         [DataMember]
+        public string StoreName { get; set; }
+
+        [DataMember]
         public int ProductID { get; set; }
 
         [DataMember]
+        public string ProductName { get; set; }
+
+        [DataMember]
+        public double Price { get; set; }
+
+        [DataMember]
         public int StockLevel { get; set; }
-
-        [DataMember]
-        public virtual Product Product { get; set; }
-
-        [DataMember]
-        public virtual Store Store { get; set; }
     }
 }

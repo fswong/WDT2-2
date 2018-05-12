@@ -24,7 +24,7 @@ namespace Assignment2.Controllers
             }
             else if (User.IsInRole(Constants.OwnerRole))
             {
-                return RedirectToAction("Index", "Owner");
+                return RedirectToAction("Inventory", "Owner");
             }
             else
             {
