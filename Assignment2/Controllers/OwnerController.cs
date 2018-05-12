@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Assignment2.Data;
 using Assignment2.Models.DataModel;
-using Assignment2.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -77,22 +76,14 @@ namespace Assignment2.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpPatch]
-        [ValidateAntiForgeryToken]
-        public IActionResult Inventory(int id, OwnerInventory data)
+        //[ValidateAntiForgeryToken]
+        public IActionResult PutInventory(OwnerInventory ownerInventory)
         {
             try {
-                //validate post
-                if (id != data.ProductID) {
-                    throw new Exception("Invalid product id provided");
-                }
-
-                _context.Update(data);
+                _context.Update(ownerInventory);
                 _context.SaveChanges();
 
-                var response = _context.OwnerInventories.Include(oi => oi.Product).ToList();
-
-                return View("~/Views/Product/OwnerInventoryList.cshtml", response);
+                return RedirectToAction("Inventory", "Owner");
             }
             catch (Exception e) {
                 ViewBag.ErrorMsg = e.Message;
@@ -115,9 +106,7 @@ namespace Assignment2.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpDelete]
-        [ValidateAntiForgeryToken]
-        public IActionResult StockRequest(int id)
+        public IActionResult FulfilStockRequest(int id)
         {
             try {
                 var stockRequest = _context.StockRequests.Where(sr => sr.StockRequestID == id).First();
@@ -144,7 +133,7 @@ namespace Assignment2.Controllers
                     _context.SaveChanges();
 
                     var model = _context.StockRequests.Include(s => s.Product).Include(s => s.Store).ToList();
-                    return View(model);
+                    return View("~/Views/Owner/StockRequest.cshtml",model);
                 }
                 else {
                     throw new Exception("Insufficient stock to process your order");

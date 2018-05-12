@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Assignment2.Data;
-using Assignment2.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,7 +31,7 @@ namespace Assignment2.Controllers
 
         [HttpGet]
         public IActionResult Stores() {
-            var stores = new StoreRepository(_context).GetStoreList();
+            var stores = _context.Stores.ToList();
             return View();
         }
     }

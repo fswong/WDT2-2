@@ -1,26 +1,17 @@
 ﻿@model IEnumerable<Assignment2.Models.DataModel.StockRequest>
 
 @{
-    Layout = null;
+    ViewData["Title"] = "StockRequest";
 }
 
-<!DOCTYPE html>
+<h2>StockRequest</h2>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>StockRequest</title>
-</head>
-<body>
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
             <th>
                 @Html.DisplayNameFor(model => model.Product)
             </th>
@@ -43,11 +34,9 @@
                 @Html.DisplayFor(modelItem => item.Store.StoreID)
             </td>
             <td>
-                <a onclick="Delete('Owner','StockRequest','@Html.DisplayFor(modelItem => item.Product.ProductID)')">Edit</a> |
+                <a asp-action="FulfilStockRequest" asp-route-id="@item.StockRequestID">Fulfil</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
-</body>
-</html>

@@ -21,7 +21,6 @@
   <ItemGroup>
     <Folder Include="Common\Constants\" />
     <Folder Include="Views\Customer\Forms\" />
-    <Folder Include="Views\FranchiseHolder\Forms\" />
     <Folder Include="Views\Store\" />
   </ItemGroup>
 

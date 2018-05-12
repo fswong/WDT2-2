@@ -1,12 +1,15 @@
-﻿@model IEnumerable<Assignment2.Models.DataModel.StoreInventory>
+﻿@model IEnumerable<Assignment2.Models.DataModel.StockRequest>
 
-<h2>Store Inventory</h2>
+<h2>Stock Request</h2>
 
+<p>
+    <a href="@Url.Action("PostStockRequest", "FranchiseHolder")">Create New</a>
+</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.StockLevel)
+                @Html.DisplayNameFor(model => model.Quantity)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Product)
@@ -21,7 +24,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.StockLevel)
+                @Html.DisplayFor(modelItem => item.Quantity)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Product.ProductID)
