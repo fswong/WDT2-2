@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using Assignment2.Models;
 using Assignment2.Models.AccountViewModels;
 using Assignment2.Services;
+using Assignment2.Data;
 
 namespace Assignment2.Controllers
 {
@@ -24,17 +25,20 @@ namespace Assignment2.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private readonly ApplicationDbContext _context;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _context = context;
         }
 
         [TempData]
@@ -209,6 +213,9 @@ namespace Assignment2.Controllers
         public IActionResult Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+            //var roles = _context.Roles.ToList();
+            //ViewData["RoleID"] = new SelectList(_context.Roles, "Id", "Name");
+            //ViewData["StoreID"] = new SelectList(_context.Stores, "StoreID", "Name");
             return View();
         }
 

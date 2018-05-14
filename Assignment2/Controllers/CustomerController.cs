@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Assignment2.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Assignment2.Controllers
 {
@@ -26,13 +27,51 @@ namespace Assignment2.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View("~/Views/Dashboard/CustomerDashboard.cshtml");
+            return View();
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult Inventory(int id, int pageNumber = 1) {
+            const int PageSize = 3;
+
+            //ViewBag.PageNumber = pageNumber;
+            //ViewBag.PageSize = PageSize;
+            //ViewBag.TotalMovies = db.Movies.Count();
+
+            //return View(db.Movies.OrderBy(movie => movie.Title).
+            //            Skip((pageNumber - 1) * PageSize).Take(PageSize).ToList());
+
+//            < div class="pagerDiv">
+//    Page @(pagedList.PageCount<pagedList.PageNumber? 0 : pagedList.PageNumber) of @pagedList.PageCount
+//    @Html.PagedListPager(pagedList, page => Url.Action("Index", new { pageNumber = page
+//    }))
+//</div>
+
+            var model = _context.StoreInventories.Include(si => si.Product).Include(si => si.Store).Where(si => si.StoreID == id).
+                Skip((pageNumber - 1) * PageSize).Take(PageSize).
+                ToList();
+            return View(model);
         }
 
         [HttpGet]
-        public IActionResult Stores() {
-            var stores = _context.Stores.ToList();
+        public IActionResult Cart()
+        {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Cart(int data)
+        {
+            return View();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _context.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

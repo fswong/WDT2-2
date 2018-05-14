@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Assignment2.Models.DataModel;
+using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -23,5 +25,11 @@ namespace Assignment2.Models.AccountViewModels
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Display(Name = "Role")]
+        public List<IdentityRole> Roles { get; set; }
+
+        [Display(Name = "Store")]
+        public List<Store> Stores { get; set; }
     }
 }

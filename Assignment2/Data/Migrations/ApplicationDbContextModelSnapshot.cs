@@ -73,9 +73,29 @@ namespace Assignment2.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Assignment2.Models.Cart", b =>
+                {
+                    b.Property<string>("CustomerID");
+
+                    b.Property<int>("ProductID");
+
+                    b.Property<int>("StoreID");
+
+                    b.Property<int>("Quantity");
+
+                    b.HasKey("CustomerID", "ProductID", "StoreID");
+
+                    b.HasIndex("ProductID");
+
+                    b.HasIndex("StoreID");
+
+                    b.ToTable("Carts");
+                });
+
             modelBuilder.Entity("Assignment2.Models.DataModel.OwnerInventory", b =>
                 {
-                    b.Property<int>("ProductID");
+                    b.Property<int>("ProductID")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("StockLevel");
 
@@ -86,8 +106,7 @@ namespace Assignment2.Data.Migrations
 
             modelBuilder.Entity("Assignment2.Models.DataModel.Product", b =>
                 {
-                    b.Property<int>("ProductID")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("ProductID");
 
                     b.Property<string>("Name");
 
@@ -143,6 +162,28 @@ namespace Assignment2.Data.Migrations
                     b.HasIndex("ProductID");
 
                     b.ToTable("StoreInventories");
+                });
+
+            modelBuilder.Entity("Assignment2.Models.Order", b =>
+                {
+                    b.Property<int>("OrderID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CustomerID");
+
+                    b.Property<int>("ProductID");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<int>("StoreID");
+
+                    b.HasKey("OrderID");
+
+                    b.HasIndex("ProductID");
+
+                    b.HasIndex("StoreID");
+
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -253,11 +294,24 @@ namespace Assignment2.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Assignment2.Models.DataModel.OwnerInventory", b =>
+            modelBuilder.Entity("Assignment2.Models.Cart", b =>
                 {
                     b.HasOne("Assignment2.Models.DataModel.Product", "Product")
-                        .WithOne("OwnerInventory")
-                        .HasForeignKey("Assignment2.Models.DataModel.OwnerInventory", "ProductID")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Assignment2.Models.DataModel.Store", "Store")
+                        .WithMany()
+                        .HasForeignKey("StoreID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Assignment2.Models.DataModel.Product", b =>
+                {
+                    b.HasOne("Assignment2.Models.DataModel.OwnerInventory", "OwnerInventory")
+                        .WithOne("Product")
+                        .HasForeignKey("Assignment2.Models.DataModel.Product", "ProductID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -283,6 +337,19 @@ namespace Assignment2.Data.Migrations
 
                     b.HasOne("Assignment2.Models.DataModel.Store", "Store")
                         .WithMany("StoreInventories")
+                        .HasForeignKey("StoreID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Assignment2.Models.Order", b =>
+                {
+                    b.HasOne("Assignment2.Models.DataModel.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Assignment2.Models.DataModel.Store", "Store")
+                        .WithMany()
                         .HasForeignKey("StoreID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

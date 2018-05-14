@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Assignment2.Models;
 using Assignment2.Models.DataModel;
 using System.Runtime.Serialization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Assignment2.Data
 {
@@ -28,6 +29,15 @@ namespace Assignment2.Data
         [DataMember]
         public DbSet<StoreInventory> StoreInventories { get; set; }
 
+        [DataMember]
+        public DbSet<Cart> Carts { get; set; }
+
+        [DataMember]
+        public DbSet<Order> Orders { get; set; }
+
+        //[DataMember]
+        //public DbSet<IdentityRole> Roles { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -42,6 +52,9 @@ namespace Assignment2.Data
 
             builder.Entity<StoreInventory>()
                 .HasKey(c => new { c.StoreID, c.ProductID });
+
+            builder.Entity<Cart>()
+                .HasKey(c => new { c.CustomerID, c.ProductID, c.StoreID });
         }
     }
 }
