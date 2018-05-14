@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Assignment2.Data;
 using Assignment2.Models;
 using Assignment2.Models.DataModel;
+using Assignment2WebAPI.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,11 +36,18 @@ namespace Assignment2WebAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public List<Cart> Get(string id)
+        public List<REST.Cart> Get(string id)
         {
             try
             {
-                return _context.Carts.Where(c => c.CustomerID == id).ToList();
+                var items = _context.Carts.Where(c => c.CustomerID == id).ToList();
+                var response = new List<REST.Cart>();
+                foreach (var item in items)
+                {
+                    response.Add(item.ToRest());
+                }
+
+                return response;
             }
             catch (Exception e)
             {
@@ -53,13 +61,13 @@ namespace Assignment2WebAPI.Controllers
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPost]
-        public List<Cart> Post(Cart data)
+        public List<REST.Cart> Post(REST.Cart data)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    _context.Add(data);
+                    _context.Add(data.ToDataModel());
                     _context.SaveChanges();
                 }
                 else
@@ -67,7 +75,14 @@ namespace Assignment2WebAPI.Controllers
                     throw new Exception("Invalid input provided");
                 }
 
-                return _context.Carts.Where(c => c.CustomerID == data.CustomerID).ToList();
+                var items = _context.Carts.Where(c => c.CustomerID == data.CustomerID).ToList();
+                var response = new List<REST.Cart>();
+                foreach (var item in items)
+                {
+                    response.Add(item.ToRest());
+                }
+
+                return response;
             }
             catch (Exception e)
             {
@@ -81,13 +96,13 @@ namespace Assignment2WebAPI.Controllers
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPut]
-        public List<Cart> Put(Cart data)
+        public List<REST.Cart> Put(REST.Cart data)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    _context.Update(data);
+                    _context.Update(data.ToDataModel());
                     _context.SaveChanges();
                 }
                 else
@@ -95,7 +110,13 @@ namespace Assignment2WebAPI.Controllers
                     throw new Exception("Invalid input provided");
                 }
 
-                return _context.Carts.Where(c => c.CustomerID == data.CustomerID).ToList();
+                var items = _context.Carts.Where(c => c.CustomerID == data.CustomerID).ToList();
+                var response = new List<REST.Cart>();
+                foreach (var item in items) {
+                    response.Add(item.ToRest());
+                }
+
+                return response;
             }
             catch (Exception e)
             {
@@ -103,15 +124,20 @@ namespace Assignment2WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// removes item from cart
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [HttpDelete]
-        public List<Cart> Delete(Cart data)
+        public List<REST.Cart> Delete(REST.Cart data)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
 
-                    _context.Remove(data);
+                    _context.Remove(data.ToDataModel());
                     _context.SaveChanges();
                 }
                 else
@@ -119,7 +145,14 @@ namespace Assignment2WebAPI.Controllers
                     throw new Exception("Invalid input provided");
                 }
 
-                return _context.Carts.Where(c => c.CustomerID == data.CustomerID).ToList();
+                var items = _context.Carts.Where(c => c.CustomerID == data.CustomerID).ToList();
+                var response = new List<REST.Cart>();
+                foreach (var item in items)
+                {
+                    response.Add(item.ToRest());
+                }
+
+                return response;
             }
             catch (Exception e)
             {

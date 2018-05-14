@@ -31,6 +31,6 @@ namespace Assignment2WebAPI.REST
         public string StoreName { get; set; }
 
         [DataMember]
-        public string ProductPrice { get; set; }
+        public double? ProductPrice { get; set; }
     }
 }
