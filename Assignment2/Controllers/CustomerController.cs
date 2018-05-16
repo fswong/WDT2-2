@@ -31,24 +31,8 @@ namespace Assignment2.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Inventory(int id, int pageNumber = 1) {
-            const int PageSize = 3;
-
-            //ViewBag.PageNumber = pageNumber;
-            //ViewBag.PageSize = PageSize;
-            //ViewBag.TotalMovies = db.Movies.Count();
-
-            //return View(db.Movies.OrderBy(movie => movie.Title).
-            //            Skip((pageNumber - 1) * PageSize).Take(PageSize).ToList());
-
-//            < div class="pagerDiv">
-//    Page @(pagedList.PageCount<pagedList.PageNumber? 0 : pagedList.PageNumber) of @pagedList.PageCount
-//    @Html.PagedListPager(pagedList, page => Url.Action("Index", new { pageNumber = page
-//    }))
-//</div>
-
+        public IActionResult Inventory(int id) {
             var model = _context.StoreInventories.Include(si => si.Product).Include(si => si.Store).Where(si => si.StoreID == id).
-                Skip((pageNumber - 1) * PageSize).Take(PageSize).
                 ToList();
             return View(model);
         }
@@ -72,6 +56,14 @@ namespace Assignment2.Controllers
                 _context.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        [HttpGet]
+        public IActionResult Sidebar()
+        {
+            // stores list
+            var stores = _context.Stores.ToList();
+            return View(stores);
         }
     }
 }

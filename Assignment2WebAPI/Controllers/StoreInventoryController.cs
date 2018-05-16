@@ -33,9 +33,17 @@ namespace Assignment2WebAPI.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public List<REST.StoreInventory> Get(int id)
+        public List<REST.StoreInventory> Get(int id, string product)
         {
-            var items = _context.StoreInventories.Include(si => si.Product).Include(si => si.Store).Where(si => si.StoreID == id).ToList();
+            List<StoreInventory> items = null;
+            if (string.IsNullOrEmpty(product))
+            {
+                items = _context.StoreInventories.Include(si => si.Product).Include(si => si.Store).Where(si => si.StoreID == id).ToList();
+            }
+            else {
+                items = _context.StoreInventories.Include(si => si.Product).Include(si => si.Store).
+                    Where(si => si.StoreID == id).Where(p => p.Product.Name.Contains(product)).ToList();
+            }
 
             List<REST.StoreInventory> response = new List<REST.StoreInventory>();
 

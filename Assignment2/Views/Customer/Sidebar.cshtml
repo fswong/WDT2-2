@@ -1,13 +1,16 @@
-﻿
+﻿@model IEnumerable<Assignment2.Models.DataModel.Store>
 @{
     Layout = null;
 }
 
 <ul class="list-unstyled CTAs components">
+    @foreach (var item in Model)
+    {
+        <li>
+            <a onclick="Get(@Html.DisplayFor(modelItem => item.StoreID))" class="download">@Html.DisplayFor(modelItem => item.Name)</a>
+        </li>
+    }
     <li>
-        <a href="Inventory" class="download">Store Inventory</a>
-    </li>
-    <li>
-        <a href="StockRequest" class="download">Stock Requests</a>
+        <a class="download">View Cart</a>
     </li>
 </ul>

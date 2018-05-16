@@ -32,7 +32,7 @@ namespace Assignment2WebAPI.Controllers
         #endregion
 
         /// <summary>
-        /// returns list of stores
+        /// returns list of items in cart
         /// </summary>
         /// <returns></returns>
         [HttpGet("{id}")]

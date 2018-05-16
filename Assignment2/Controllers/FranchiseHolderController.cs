@@ -116,9 +116,24 @@ namespace Assignment2.Controllers
 
                 // set it here, no need to muck about in the GUI
                 data.StoreID = theUser.StoreID;
+                //data.StoreID = 4;
 
                 if (ModelState.IsValid)
                 {
+                    // if the item does not exist, add it
+                    var exists = _context.StoreInventories.Where(si => si.ProductID == data.ProductID).Where(si => si.StoreID == data.StoreID).ToList();
+
+                    if (!(exists.Count() > 0)) {
+                        _context.Add(
+                        new StoreInventory
+                        {
+                            StoreID = data.StoreID,
+                            ProductID = data.ProductID,
+                            StockLevel = 0
+                        }
+                        );
+                    }
+
                     _context.Add(data);
                     _context.SaveChanges();
                 }
@@ -135,5 +150,69 @@ namespace Assignment2.Controllers
                 return View("~/Views/Common/Error.cshtml");
             }
         }
+
+        //[HttpGet]
+        //public IActionResult NewStockRequest()
+        //{
+        //    try
+        //    {
+        //        var inventory = _context.StoreInventories.Include(si => si.Product).ToList();
+        //        var exclude = new List<Product>();
+
+        //        foreach(var item in inventory){
+        //            exclude.Add(item.Product);
+        //        }
+
+        //        // get products the store doesnt have
+        //        var products = _context.Products.Except(exclude);
+
+        //        ViewData["ProductID"] = new SelectList(products, "ProductID", "Name");
+        //        return View("~/Views/FranchiseHolder/Forms/NewStockRequest.cshtml");
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        ViewBag.ErrorMsg = e.Message;
+        //        return View("~/Views/Common/Error.cshtml");
+        //    }
+        //}
+
+        //public IActionResult NewStockRequest(StockRequest data)
+        //{
+        //    try
+        //    {
+        //        var user = _userManager.GetUserId(User);
+        //        var theUser = _context.Users.Where(u => u.Id == user).First();
+
+        //        // set it here, no need to muck about in the GUI
+        //        data.StoreID = theUser.StoreID;
+
+        //        if (ModelState.IsValid)
+        //        {
+        //            // add the product to the inventory
+        //            _context.Add(
+        //                new StoreInventory {
+        //                    StoreID = theUser.StoreID,
+        //                    ProductID = data.ProductID,
+        //                    StockLevel = 0
+        //                }
+        //                );
+
+        //            _context.Add(data);
+        //            _context.SaveChanges();
+        //        }
+        //        else
+        //        {
+        //            throw new Exception("Invalid input provided");
+        //        }
+
+        //        var model = _context.StockRequests.Include(sr => sr.Product).Include(sr => sr.Store).Where(sr => sr.StoreID == theUser.StoreID).ToList();
+        //        return View("~/Views/FranchiseHolder/StockRequest.cshtml", model);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        ViewBag.ErrorMsg = e.Message;
+        //        return View("~/Views/Common/Error.cshtml");
+        //    }
+        //}
     }
 }
