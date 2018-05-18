@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Assignment2WebAPI.REST.RESTStoreInventory>
+
+@{
+    ViewData["Title"] = "StoreInventory";
+}
+
+<h2>StoreInventory</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.StockLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StoreName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.StockLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StoreName)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

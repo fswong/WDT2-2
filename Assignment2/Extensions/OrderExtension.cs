@@ -12,8 +12,8 @@ namespace Assignment2WebAPI.Extensions
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static REST.Order ToRest(this Assignment2.Models.Order item){
-            return new REST.Order{
+        public static REST.RESTOrder ToRest(this Assignment2.Models.Order item){
+            return new REST.RESTOrder{
                 OrderID = item.OrderID,
                 CustomerID = item.CustomerID,
                 ProductID = item.ProductID,

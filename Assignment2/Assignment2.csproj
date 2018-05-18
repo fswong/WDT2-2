@@ -10,6 +10,7 @@
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" PrivateAssets="All" />
+    <PackageReference Include="RestSharp" Version="106.2.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,7 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Common\Constants\" />
-    <Folder Include="Views\Customer\Forms\" />
+    <Folder Include="Data\Migrations\" />
     <Folder Include="Views\Store\" />
   </ItemGroup>
 

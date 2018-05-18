@@ -7,10 +7,14 @@
     @foreach (var item in Model)
     {
         <li>
-            <a onclick="Get(@Html.DisplayFor(modelItem => item.StoreID))" class="download">@Html.DisplayFor(modelItem => item.Name)</a>
+            @Html.ActionLink(item.Name, "StoreInventory", new { id = item.StoreID })
+            @*<a href="StoreInventory/@Html.DisplayFor(modelItem => item.StoreID)" class="download">@Html.DisplayFor(modelItem => item.Name)</a>*@
         </li>
     }
     <li>
-        <a class="download">View Cart</a>
+        <a href="@Url.Action("Cart", "Customer")" class="download">View Cart</a>
+    </li>
+    <li>
+        <a href="@Url.Action("Order", "Customer")" class="download">Order History</a>
     </li>
 </ul>

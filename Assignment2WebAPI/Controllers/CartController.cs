@@ -36,12 +36,12 @@ namespace Assignment2WebAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public List<REST.Cart> Get(string id)
+        public List<REST.RESTCart> Get(string id)
         {
             try
             {
                 var items = _context.Carts.Where(c => c.CustomerID == id).ToList();
-                var response = new List<REST.Cart>();
+                var response = new List<REST.RESTCart>();
                 foreach (var item in items)
                 {
                     response.Add(item.ToRest());
@@ -61,7 +61,7 @@ namespace Assignment2WebAPI.Controllers
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPost]
-        public List<REST.Cart> Post(REST.Cart data)
+        public List<REST.RESTCart> Post(REST.RESTCart data)
         {
             try
             {
@@ -76,7 +76,7 @@ namespace Assignment2WebAPI.Controllers
                 }
 
                 var items = _context.Carts.Where(c => c.CustomerID == data.CustomerID).ToList();
-                var response = new List<REST.Cart>();
+                var response = new List<REST.RESTCart>();
                 foreach (var item in items)
                 {
                     response.Add(item.ToRest());
@@ -96,7 +96,7 @@ namespace Assignment2WebAPI.Controllers
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPut]
-        public List<REST.Cart> Put(REST.Cart data)
+        public List<REST.RESTCart> Put(REST.RESTCart data)
         {
             try
             {
@@ -111,7 +111,7 @@ namespace Assignment2WebAPI.Controllers
                 }
 
                 var items = _context.Carts.Where(c => c.CustomerID == data.CustomerID).ToList();
-                var response = new List<REST.Cart>();
+                var response = new List<REST.RESTCart>();
                 foreach (var item in items) {
                     response.Add(item.ToRest());
                 }
@@ -130,7 +130,7 @@ namespace Assignment2WebAPI.Controllers
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpDelete]
-        public List<REST.Cart> Delete(REST.Cart data)
+        public List<REST.RESTCart> Delete(REST.RESTCart data)
         {
             try
             {
@@ -146,7 +146,7 @@ namespace Assignment2WebAPI.Controllers
                 }
 
                 var items = _context.Carts.Where(c => c.CustomerID == data.CustomerID).ToList();
-                var response = new List<REST.Cart>();
+                var response = new List<REST.RESTCart>();
                 foreach (var item in items)
                 {
                     response.Add(item.ToRest());

@@ -12,8 +12,8 @@ namespace Assignment2WebAPI.Extensions
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static REST.StoreInventory ToRest(this Assignment2.Models.DataModel.StoreInventory item) {
-            return new REST.StoreInventory {
+        public static REST.RESTStoreInventory ToRest(this Assignment2.Models.DataModel.StoreInventory item) {
+            return new REST.RESTStoreInventory {
                 StoreID = item.StoreID,
                 StoreName = item.Store.Name,
                 ProductID = item.ProductID,

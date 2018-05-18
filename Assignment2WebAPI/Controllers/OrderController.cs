@@ -28,12 +28,12 @@ namespace Assignment2WebAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public List<REST.Order> Get(string id)
+        public List<REST.RESTOrder> Get(string id)
         {
             try
             {
                 var items = _context.Orders.Where(c => c.CustomerID == id).ToList();
-                var response = new List<REST.Order>();
+                var response = new List<REST.RESTOrder>();
                 foreach (var item in items)
                 {
                     response.Add(item.ToRest());
@@ -53,7 +53,7 @@ namespace Assignment2WebAPI.Controllers
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPost]
-        public List<REST.Order> Post(REST.Order data)
+        public List<REST.RESTOrder> Post(REST.RESTOrder data)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace Assignment2WebAPI.Controllers
 
                 // return the list of orders
                 var items = _context.Orders.Where(c => c.CustomerID == data.CustomerID).ToList();
-                var response = new List<REST.Order>();
+                var response = new List<REST.RESTOrder>();
                 foreach (var item in items)
                 {
                     response.Add(item.ToRest());
