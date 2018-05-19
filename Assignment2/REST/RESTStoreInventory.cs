@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -25,6 +26,7 @@ namespace Assignment2WebAPI.REST
         public string ProductName { get; set; }
 
         [DataMember]
+        [DataType(DataType.Currency)]
         public double Price { get; set; }
 
         [DisplayName("Stock Available")]

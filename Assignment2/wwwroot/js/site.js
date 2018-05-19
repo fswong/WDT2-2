@@ -96,6 +96,11 @@ var GetForm = function (controller, method, var1, var2) {
 };
 
 var PostCart = function () {
+    if (document.getElementById("Quantity").value < 1) {
+        alert("please insert a quantity greater than 0");
+        return false;
+    }
+
     var data = {
         CustomerID: document.getElementById("CustomerID").value,
         ProductID: document.getElementById("ProductID").value,
@@ -116,10 +121,12 @@ var PostCart = function () {
             data: data
         },
         success: function (response) {
-            document.getElementById("user_body").innerHTML = response;
+            window.location.href = "https://localhost:44300/Customer/Cart";
+            //document.getElementById("user_body").innerHTML = response;
         },
         error: function (error) {
-            console.log(error);
+            window.location.href = "https://localhost:44300/Customer/Cart";
+            //console.log(error);
         }
     });
     return false;
@@ -140,7 +147,7 @@ var DeleteCart = function (CustomerID, StoreID, ProductID) {
     $.ajax({
         url: url,
         type: 'DELETE',
-        //headers: headers,
+        headers: headers,
         crossDomain: true,
         xhrFields: { withCredentials: true },
         //data: {
@@ -148,8 +155,10 @@ var DeleteCart = function (CustomerID, StoreID, ProductID) {
         //    data: data
         //},
         success: function (response) {
+            window.location.href = "https://localhost:44300/Customer/Cart";
         },
         error: function (error) {
+            window.location.href = "https://localhost:44300/Customer/Cart";
         }
     });
     return false;

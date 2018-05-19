@@ -1,7 +1,58 @@
-﻿
+﻿@model IEnumerable<Assignment2.Models.Order>
 @{
     ViewData["Title"] = "Receipt";
 }
 
-<h2>Receipt</h2>
+<h2>Thank you for your purchase</h2>
+
+<h4>Your reference number: @ViewBag.OrderMain</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.Price)
+            </th>
+            <th>
+                Total
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+
+            double total = ((int)item.Quantity * (double)item.Product.Price);
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Price)
+                </td>
+                <td>
+
+                    @total
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 

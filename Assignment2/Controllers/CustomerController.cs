@@ -201,6 +201,7 @@ namespace Assignment2.Controllers
         public IActionResult Checkout(CreditCardViewModel creditcard)
         {
             var orderId = Guid.NewGuid();
+            var OrderMain = orderId.ToString();
 
             try
             {
@@ -251,19 +252,21 @@ namespace Assignment2.Controllers
                     var storeInventory = _context.StoreInventories.Where(c => c.StoreID == item.StoreID)
                         .Where(c => c.ProductID == item.ProductID).First();
                     storeInventory.StockLevel = storeInventory.StockLevel - item.Quantity;
-                    _context.Remove(storeInventory);
+                    _context.Update(storeInventory);
                 }
 
                 
                 _context.SaveChanges();
+                ViewBag.OrderMain = OrderMain;
+                var orders = _context.Orders.Include(o => o.Product).Include(o => o.Store).Where(o => o.OrderMain == OrderMain).ToList();
+
+                return View("~/Views/Customer/Receipt.cshtml", orders);
             }
             catch (Exception e)
             {
                 ViewBag.ErrorMsg = e.Message;
                 return View("~/Views/Common/Error.cshtml");
             }
-
-            return RedirectToAction("Receipt", "Customer", orderId);
         }
 
         /// <summary>
