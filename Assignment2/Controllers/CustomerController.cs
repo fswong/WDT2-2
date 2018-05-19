@@ -45,8 +45,15 @@ namespace Assignment2.Controllers
         /// <returns></returns>
         [HttpGet("{id}")]
         public IActionResult StoreInventory(int id) {
-            var inventory = HttpClientHelper.GetCollection<Assignment2WebAPI.REST.RESTStoreInventory>($"store_inventory/{id}");
-            return View(inventory.data);
+            try {
+                var inventory = HttpClientHelper.GetCollection<Assignment2WebAPI.REST.RESTStoreInventory>($"store_inventory/{id}");
+                return View(inventory.data);
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMsg = e.Message;
+                return View("~/Views/Common/Error.cshtml");
+            }
         }
 
         /// <summary>
@@ -56,9 +63,20 @@ namespace Assignment2.Controllers
         [HttpGet]
         public IActionResult Cart()
         {
-            var user = _userManager.GetUserId(User);
-            var cart = HttpClientHelper.GetCollection<Assignment2WebAPI.REST.RESTCart>($"cart/{user}");
-            return View(cart.data);
+            try
+            {
+                var user = _userManager.GetUserId(User);
+                var cart = HttpClientHelper.GetCollection<Assignment2WebAPI.REST.RESTCart>($"cart/{user}");
+                ViewBag.CustomerID = user;
+
+                return View(cart.data);
+
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMsg = e.Message;
+                return View("~/Views/Common/Error.cshtml");
+            }
         }
 
         /// <summary>
@@ -70,11 +88,47 @@ namespace Assignment2.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Cart(RESTCart data)
         {
-            HttpClientHelper.Post<Assignment2WebAPI.REST.RESTCart>(data.ToHttpBody(), "cart");
+            try
+            {
+                HttpClientHelper.Post<Assignment2WebAPI.REST.RESTCart>(data.ToHttpBody(), "cart");
 
-            var user = _userManager.GetUserId(User);
-            var cart = HttpClientHelper.GetCollection<Assignment2WebAPI.REST.RESTCart>($"cart/{user}");
-            return View(cart.data);
+                var user = _userManager.GetUserId(User);
+                var cart = HttpClientHelper.GetCollection<Assignment2WebAPI.REST.RESTCart>($"cart/{user}");
+                return View(cart.data);
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMsg = e.Message;
+                return View("~/Views/Common/Error.cshtml");
+            }
+        }
+
+        /// <summary>
+        /// display the form
+        /// </summary>
+        /// <param name="StoreID"></param>
+        /// <param name="ProductID"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult CartForm(int? StoreID, int? ProductID)
+        {
+            try {
+                if (StoreID == null || ProductID == null) {
+                    throw new Exception("Invalid information provided");
+                }
+
+                var user = _userManager.GetUserId(User);
+
+                ViewBag.StoreID = StoreID;
+                ViewBag.ProductID = ProductID;
+                ViewBag.CustomerID = user;
+                return View("~/Views/Customer/Forms/CartForm.cshtml");
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMsg = e.Message;
+                return View("~/Views/Common/Error.cshtml");
+            }
         }
 
         /// <summary>
@@ -97,9 +151,18 @@ namespace Assignment2.Controllers
         [HttpGet]
         public IActionResult Sidebar()
         {
-            // stores list
-            var stores = _context.Stores.ToList();
-            return View(stores);
+            try
+            {
+                // stores list
+                var stores = _context.Stores.ToList();
+                return View(stores);
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMsg = e.Message;
+                return View("~/Views/Common/Error.cshtml");
+            }
+            
         }
 
         /// <summary>
@@ -109,7 +172,23 @@ namespace Assignment2.Controllers
         [HttpGet]
         public IActionResult Checkout()
         {
-            return View(new CreditCardViewModel { CreditCardType = CardType.MasterCard });
+            try
+            {
+                var user = _userManager.GetUserId(User);
+                var cart = HttpClientHelper.GetCollection<Assignment2WebAPI.REST.RESTCart>($"cart/{user}");
+
+                if (cart.data.Count() == 0)
+                {
+                    throw new Exception("No products in cart");
+                }
+
+                return View(new CreditCardViewModel { CreditCardType = CardType.MasterCard });
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMsg = e.Message;
+                return View("~/Views/Common/Error.cshtml");
+            }
         }
 
         /// <summary>
@@ -121,6 +200,8 @@ namespace Assignment2.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Checkout(CreditCardViewModel creditcard)
         {
+            var orderId = Guid.NewGuid();
+
             try
             {
                 // Validate card type.
@@ -134,6 +215,47 @@ namespace Assignment2.Controllers
                 {
                     throw new Exception("Creditcard is invalid");
                 }
+
+                var user = _userManager.GetUserId(User);
+                var cart = HttpClientHelper.GetCollection<Assignment2WebAPI.REST.RESTCart>($"cart/{user}");
+
+                if (cart.data.Count() == 0) {
+                    throw new Exception("No items in cart");
+                }
+
+                
+
+                //create the order
+                _context.Add(new OrderHeader { OrderMain = orderId.ToString() });
+
+                foreach (var item in cart.data)
+                {
+                    // add the order
+                    _context.Add(
+                        new Assignment2.Models.Order
+                        {
+                            ProductID = item.ProductID,
+                            OrderMain = orderId.ToString(),
+                            StoreID = item.StoreID,
+                            CustomerID = item.CustomerID,
+                            Quantity = item.Quantity
+                        }
+                        );
+
+                    // clear the cart
+                    var cartitem = _context.Carts.Where(c => c.ProductID == item.ProductID)
+                        .Where(c => c.StoreID == item.StoreID).First();
+                    _context.Remove(cartitem);
+
+                    // reduce the stock
+                    var storeInventory = _context.StoreInventories.Where(c => c.StoreID == item.StoreID)
+                        .Where(c => c.ProductID == item.ProductID).First();
+                    storeInventory.StockLevel = storeInventory.StockLevel - item.Quantity;
+                    _context.Remove(storeInventory);
+                }
+
+                
+                _context.SaveChanges();
             }
             catch (Exception e)
             {
@@ -141,19 +263,44 @@ namespace Assignment2.Controllers
                 return View("~/Views/Common/Error.cshtml");
             }
 
-            return RedirectToAction("Receipt", "Customer");
+            return RedirectToAction("Receipt", "Customer", orderId);
         }
 
+        /// <summary>
+        /// returns a list of past orders
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Order()
         {
-            var user = _userManager.GetUserId(User);
-            var order = HttpClientHelper.GetCollection<Assignment2WebAPI.REST.RESTOrder>($"order/{user}");
-            return View(order.data);
+            try {
+                var user = _userManager.GetUserId(User);
+                var order = HttpClientHelper.GetCollection<Assignment2WebAPI.REST.RESTOrder>($"order/{user}");
+                return View(order.data);
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMsg = e.Message;
+                return View("~/Views/Common/Error.cshtml");
+            }
         }
 
-        public IActionResult Receipt() {
-            return View();
+        /// <summary>
+        /// on success display receipt page
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Receipt(string OrderMain) {
+            try {
+                ViewBag.OrderMain = OrderMain;
+                var orders = _context.Orders.Include(o => o.Product).Include(o => o.Store).Where(o => o.OrderMain == OrderMain).ToList();
+
+                return View(orders);
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMsg = e.Message;
+                return View("~/Views/Common/Error.cshtml");
+            }
         }
     }
 }

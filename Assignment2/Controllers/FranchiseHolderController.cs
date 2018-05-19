@@ -105,9 +105,9 @@ namespace Assignment2.Controllers
             }
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        public IActionResult PostStockRequest(StockRequest data)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult PostStockRequest([Bind("StoreID,ProductID,Quantity")] StockRequest data)
         {
             try
             {

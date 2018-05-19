@@ -35,6 +35,9 @@ namespace Assignment2.Data
         [DataMember]
         public DbSet<Order> Orders { get; set; }
 
+        [DataMember]
+        public DbSet<OrderHeader> OrderHeaders { get; set; }
+
         //[DataMember]
         //public DbSet<IdentityRole> Roles { get; set; }
 

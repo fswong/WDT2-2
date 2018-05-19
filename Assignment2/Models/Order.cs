@@ -18,6 +18,9 @@ namespace Assignment2.Models
         public int OrderID { get; set; }
 
         [DataMember]
+        public string OrderMain { get; set; } //the foreign key
+
+        [DataMember]
         public int ProductID { get; set; }
 
         [DataMember]

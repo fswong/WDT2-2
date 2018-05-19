@@ -1,6 +1,7 @@
 ﻿using Assignment2.Data;
 using Assignment2WebAPI.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace Assignment2WebAPI.Controllers
         {
             try
             {
-                var items = _context.Orders.Where(c => c.CustomerID == id).ToList();
+                var items = _context.Orders.Include(c => c.Product).Include(c => c.Store).Where(c => c.CustomerID == id).ToList();
                 var response = new List<REST.RESTOrder>();
                 foreach (var item in items)
                 {

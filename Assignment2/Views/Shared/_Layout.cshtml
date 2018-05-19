@@ -50,6 +50,12 @@
         </div>
     </nav>
 
+    <div id="popup_form" class="popup">
+        <form id="ajax_form">
+            <div id="form_body"></div>
+        </form>
+    </div>
+
     <div class="wrapper">
         @await Html.PartialAsync("_Sidebar")
 
@@ -105,7 +111,7 @@
 
     @if (User.Identity.IsAuthenticated)
     {
-    <script type="text/javascript">
+        <script type="text/javascript">
 
             $.ajax({
             type: 'GET',
@@ -121,7 +127,7 @@
             }
         });
 
-    </script>
+        </script>
     }
 </body>
 </html>

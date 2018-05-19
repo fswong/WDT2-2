@@ -29,6 +29,13 @@ namespace Assignment2WebAPI
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddMvc();
+
+            services.AddCors(o => o.AddPolicy("OpenPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +45,8 @@ namespace Assignment2WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("OpenPolicy");
 
             app.UseMvc();
         }

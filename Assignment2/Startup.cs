@@ -71,6 +71,13 @@ namespace Assignment2
             services.AddMvc();
             services.AddTransient<UserManager<ApplicationUser>>();
 
+            services.AddCors(o => o.AddPolicy("OpenPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
+
             services.AddDistributedMemoryCache();
             services.AddSession();
         }
@@ -94,6 +101,8 @@ namespace Assignment2
             app.UseAuthentication();
 
             app.UseRewriter(new RewriteOptions().AddRedirectToHttps());
+
+            app.UseCors("OpenPolicy");
 
             app.UseMvc(routes =>
             {

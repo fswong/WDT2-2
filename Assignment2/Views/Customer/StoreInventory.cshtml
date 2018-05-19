@@ -18,7 +18,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
-            <th></th>
+            <th>
+                Action
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -32,6 +34,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                 <a onclick="GetForm('Customer', 'CartForm', @item.StoreID, @item.ProductID)">Add to Cart</a>
             </td>
         </tr>
 }

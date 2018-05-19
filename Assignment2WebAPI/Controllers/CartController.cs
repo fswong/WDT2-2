@@ -12,6 +12,7 @@ using Assignment2WebAPI.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace Assignment2WebAPI.Controllers
@@ -40,7 +41,7 @@ namespace Assignment2WebAPI.Controllers
         {
             try
             {
-                var items = _context.Carts.Where(c => c.CustomerID == id).ToList();
+                var items = _context.Carts.Include(c => c.Product).Include(c => c.Store).Where(c => c.CustomerID == id).ToList();
                 var response = new List<REST.RESTCart>();
                 foreach (var item in items)
                 {
@@ -65,17 +66,50 @@ namespace Assignment2WebAPI.Controllers
         {
             try
             {
+                if (data.Quantity < 1) {
+                    throw new Exception("Invalid quantity provided");
+                }
+
                 if (ModelState.IsValid)
                 {
-                    _context.Add(data.ToDataModel());
-                    _context.SaveChanges();
+                    // check if item exists
+                    var exists = _context.Carts.Where(c => c.ProductID == data.ProductID)
+                        .Where(c => c.StoreID == data.StoreID)
+                        .Where(c => c.CustomerID == data.CustomerID).FirstOrDefault();
+
+                    var quantity = 0;
+
+                    if (exists == null)
+                    {
+                        quantity = data.Quantity;
+                        _context.Add(data.ToDataModel());
+                    }
+                    else {
+                        exists.Quantity += data.Quantity;
+
+                        quantity = exists.Quantity;
+                        _context.Update(exists);
+                    }
+
+                    // check the stock level
+                    var storeInventory = _context.StoreInventories.Where(c => c.StoreID == data.StoreID).Where(c => c.ProductID == data.ProductID).FirstOrDefault();
+                    if (storeInventory == null)
+                    {
+                        throw new Exception("Invalid Item chosen");
+                    }
+                    else {
+                        if (quantity > storeInventory.StockLevel) {
+                            throw new Exception("Insufficient stock");
+                        }
+                        _context.SaveChanges();
+                    }
+                    
                 }
                 else
                 {
                     throw new Exception("Invalid input provided");
                 }
-
-                var items = _context.Carts.Where(c => c.CustomerID == data.CustomerID).ToList();
+                var items = _context.Carts.Include(c => c.Product).Include(c => c.Store).Where(c => c.CustomerID == data.CustomerID).ToList();
                 var response = new List<REST.RESTCart>();
                 foreach (var item in items)
                 {
@@ -129,15 +163,22 @@ namespace Assignment2WebAPI.Controllers
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        [HttpDelete]
-        public List<REST.RESTCart> Delete(REST.RESTCart data)
+        [HttpDelete("{CustomerID}/{StoreID}/{ProductID}")]
+        public List<REST.RESTCart> Delete([FromRoute]string CustomerID, int? StoreID, int? ProductID)
         {
             try
             {
-                if (ModelState.IsValid)
-                {
+                if (StoreID == null || ProductID == null) {
+                    throw new Exception("Invalid input provided");
+                }
 
-                    _context.Remove(data.ToDataModel());
+                var exists = _context.Carts.Where(c => c.ProductID == ProductID)
+                        .Where(c => c.StoreID == StoreID)
+                        .Where(c => c.CustomerID == CustomerID).FirstOrDefault();
+
+                if (exists != null)
+                {
+                    _context.Remove(exists);
                     _context.SaveChanges();
                 }
                 else
@@ -145,7 +186,7 @@ namespace Assignment2WebAPI.Controllers
                     throw new Exception("Invalid input provided");
                 }
 
-                var items = _context.Carts.Where(c => c.CustomerID == data.CustomerID).ToList();
+                var items = _context.Carts.Where(c => c.CustomerID == CustomerID).ToList();
                 var response = new List<REST.RESTCart>();
                 foreach (var item in items)
                 {
