@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using Assignment2.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -44,6 +50,18 @@
         </div>
     </nav>
 
+    <div class="wrapper">
+        @await Html.PartialAsync("_Sidebar")
+
+        <div class="container body-content">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; 2018 - Assignment2</p>
+            </footer>
+        </div>
+    </div>
+
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
@@ -68,18 +86,42 @@
 
     @RenderSection("Scripts", required: false)
 
-    
+    @{
+        string role = "";
+    }
 
-    <div class="wrapper">
-        @await Html.PartialAsync("_Sidebar")
+    @if (User.Identity.IsAuthenticated && User.IsInRole("OwnerRole"))
+    {
+        role = "Owner";
+    }
+    else if (User.Identity.IsAuthenticated && User.IsInRole("CustomerRole"))
+    {
+        role = "Customer";
+    }
+    else if (User.Identity.IsAuthenticated && User.IsInRole("FranchiseHolderRole"))
+    {
+        role = "FranchiseHolder";
+    }
 
-        <div class="container body-content">
-            @RenderBody()
-            <hr />
-            <footer>
-                <p>&copy; 2018 - Assignment2</p>
-            </footer>
-        </div>
-    </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+    <script type="text/javascript">
+
+            $.ajax({
+            type: 'GET',
+            url: '/@role/Sidebar',
+            cache: false,
+            contentType: 'application/json; charset=utf-8',
+            data: '',
+            success: function (response) {
+                document.getElementById("sidebar-content").innerHTML = response;
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+    </script>
+    }
 </body>
 </html>

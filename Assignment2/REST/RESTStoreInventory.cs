@@ -1,6 +1,7 @@
 ﻿using Assignment2.Helpers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -19,12 +20,14 @@ namespace Assignment2WebAPI.REST
         [DataMember]
         public int ProductID { get; set; }
 
+        [DisplayName("Product Name")]
         [DataMember]
         public string ProductName { get; set; }
 
         [DataMember]
         public double Price { get; set; }
 
+        [DisplayName("Stock Available")]
         [DataMember]
         public int StockLevel { get; set; }
 

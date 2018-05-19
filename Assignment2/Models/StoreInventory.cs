@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace Assignment2.Models.DataModel
         public int ProductID { get; set; }
 
         [DataMember]
+        [Display(Name = "Stock Level")]
         public int StockLevel { get; set; }
 
         [DataMember]

@@ -6,7 +6,6 @@
 
 @{
     string active = "";
-    string role = "";
 }
 
 @if (SignInManager.IsSignedIn(User))
@@ -18,43 +17,13 @@ else
     active = "active";
 }
 
-@if (User.Identity.IsAuthenticated)
-{
-    @if (User.Identity.IsAuthenticated && User.IsInRole("OwnerRole"))
-    {
-        role = "Owner";
-    }
-    else if (User.Identity.IsAuthenticated && User.IsInRole("CustomerRole"))
-    {
-        role = "Customer";
-    }
-    else if (User.Identity.IsAuthenticated && User.IsInRole("FranchiseHolderRole"))
-    {
-        role = "FranchiseHolder";
-    }
-    <nav id="sidebar" class="@active">
-        <div class="sidebar-header">
-            <h3>Sidebar</h3>
-        </div>
+<nav id="sidebar" class="@active">
+    <div class="sidebar-header">
+        <h3>Sidebar</h3>
+    </div>
 
-        <div id="sidebar-content">
-        </div>
-    </nav>
+    <div id="sidebar-content">
+    </div>
+</nav>
 
-    <script type="text/javascript">
-        $.ajax({
-            type: 'GET',
-            url: '/@role/Sidebar',
-            cache: false,
-            contentType: 'application/json; charset=utf-8',
-            data: '',
-            success: function (response) {
-                document.getElementById("sidebar-content").innerHTML = response;
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
-    </script>
-}
 

@@ -4,7 +4,7 @@
     ViewData["Title"] = "StoreInventory";
 }
 
-<h2>StoreInventory</h2>
+<h2>Store Inventory</h2>
 
 <table class="table">
     <thead>
@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.ProductName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StoreName)
+                @Html.DisplayNameFor(model => model.Price)
             </th>
             <th></th>
         </tr>
@@ -31,7 +31,7 @@
                 @Html.DisplayFor(modelItem => item.ProductName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StoreName)
+                @Html.DisplayFor(modelItem => item.Price)
             </td>
         </tr>
 }

@@ -23,3 +23,19 @@ $(document).ready(function () {
         $(this).toggleClass('active');
     });
 });
+
+var GetSidebar = function (role) {
+    $.ajax({
+        type: 'GET',
+        url: '/' + role + '/Sidebar',
+        cache: false,
+        contentType: 'application/json; charset=utf-8',
+        data: '',
+        success: function (response) {
+            document.getElementById("sidebar-content").innerHTML = response;
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Assignment2.Common.Enums;
 using Assignment2.Data;
 using Assignment2.Helpers;
 using Assignment2.Models;
@@ -34,15 +35,24 @@ namespace Assignment2.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Cart", "Customer");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public IActionResult StoreInventory(int id) {
             var inventory = HttpClientHelper.GetCollection<Assignment2WebAPI.REST.RESTStoreInventory>($"store_inventory/{id}");
             return View(inventory.data);
         }
 
+        /// <summary>
+        /// displays the current cart
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Cart()
         {
@@ -51,7 +61,13 @@ namespace Assignment2.Controllers
             return View(cart.data);
         }
 
+        /// <summary>
+        /// add an item to cart
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Cart(RESTCart data)
         {
             HttpClientHelper.Post<Assignment2WebAPI.REST.RESTCart>(data.ToHttpBody(), "cart");
@@ -61,6 +77,10 @@ namespace Assignment2.Controllers
             return View(cart.data);
         }
 
+        /// <summary>
+        /// forgot what I added this for
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -70,6 +90,10 @@ namespace Assignment2.Controllers
             base.Dispose(disposing);
         }
 
+        /// <summary>
+        /// generic sidebar
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Sidebar()
         {
@@ -78,20 +102,46 @@ namespace Assignment2.Controllers
             return View(stores);
         }
 
+        /// <summary>
+        /// ask for the payment details
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Checkout()
         {
-            var user = _userManager.GetUserId(User);
-            var cart = HttpClientHelper.GetCollection<Assignment2WebAPI.REST.RESTCart>($"cart/{user}");
-            return View(cart.data);
+            return View(new CreditCardViewModel { CreditCardType = CardType.MasterCard });
         }
 
+        /// <summary>
+        /// places the actual order
+        /// </summary>
+        /// <param name="creditcard"></param>
+        /// <returns></returns>
         [HttpPost]
-        public IActionResult Checkout(string creditcard)
+        [ValidateAntiForgeryToken]
+        public IActionResult Checkout(CreditCardViewModel creditcard)
         {
-            var user = _userManager.GetUserId(User);
-            var cart = HttpClientHelper.GetCollection<Assignment2WebAPI.REST.RESTCart>($"cart/{user}");
-            return View(cart.data);
+            try
+            {
+                // Validate card type.
+                CardType expectedCardType = CreditCardHelper.GetCardType(creditcard.CreditCardNumber);
+                if (expectedCardType == CardType.Unknown || expectedCardType != creditcard.CreditCardType)
+                {
+                    ModelState.AddModelError("CreditCardType", "The Credit Card Type field does not match against the credit card number.");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    throw new Exception("Creditcard is invalid");
+                }
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMsg = e.Message;
+                return View("~/Views/Common/Error.cshtml");
+            }
+
+            return RedirectToAction("Receipt", "Customer");
         }
 
         [HttpGet]
@@ -100,6 +150,10 @@ namespace Assignment2.Controllers
             var user = _userManager.GetUserId(User);
             var order = HttpClientHelper.GetCollection<Assignment2WebAPI.REST.RESTOrder>($"order/{user}");
             return View(order.data);
+        }
+
+        public IActionResult Receipt() {
+            return View();
         }
     }
 }
