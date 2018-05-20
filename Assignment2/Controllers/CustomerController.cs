@@ -305,5 +305,46 @@ namespace Assignment2.Controllers
                 return View("~/Views/Common/Error.cshtml");
             }
         }
+
+        /// <summary>
+        /// removes item from cart
+        /// </summary>
+        /// <param name="CustomerID"></param>
+        /// <param name="StoreID"></param>
+        /// <param name="ProductID"></param>
+        public IActionResult DeleteCart(string CustomerID, string StoreID, string ProductID)
+        {
+            try
+            {
+                //if (StoreID == null || ProductID == null) {
+                //    throw new Exception("Invalid input provided");
+                //}
+
+                var exists = _context.Carts.Where(c => c.ProductID == Convert.ToInt32(ProductID))
+                        .Where(c => c.StoreID == Convert.ToInt32(StoreID))
+                        .Where(c => c.CustomerID == CustomerID).FirstOrDefault();
+
+                if (exists != null)
+                {
+                    _context.Remove(exists);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("Invalid input provided");
+                }
+
+                var user = _userManager.GetUserId(User);
+                var cart = HttpClientHelper.GetCollection<Assignment2WebAPI.REST.RESTCart>($"cart/{user}");
+                ViewBag.CustomerID = user;
+
+                return View("~/Views/Customer/Cart.cshtml",cart.data);
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMsg = e.Message;
+                return View("~/Views/Common/Error.cshtml");
+            }
+        }
     }
 }

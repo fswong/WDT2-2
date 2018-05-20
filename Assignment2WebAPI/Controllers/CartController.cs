@@ -164,13 +164,13 @@ namespace Assignment2WebAPI.Controllers
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpDelete("{CustomerID}/{StoreID}/{ProductID}")]
-        public List<REST.RESTCart> Delete([FromRoute]string CustomerID, int? StoreID, int? ProductID)
+        public void Delete([FromRoute]string CustomerID, int StoreID, int ProductID)
         {
             try
             {
-                if (StoreID == null || ProductID == null) {
-                    throw new Exception("Invalid input provided");
-                }
+                //if (StoreID == null || ProductID == null) {
+                //    throw new Exception("Invalid input provided");
+                //}
 
                 var exists = _context.Carts.Where(c => c.ProductID == ProductID)
                         .Where(c => c.StoreID == StoreID)
@@ -185,15 +185,7 @@ namespace Assignment2WebAPI.Controllers
                 {
                     throw new Exception("Invalid input provided");
                 }
-
-                var items = _context.Carts.Where(c => c.CustomerID == CustomerID).ToList();
-                var response = new List<REST.RESTCart>();
-                foreach (var item in items)
-                {
-                    response.Add(item.ToRest());
-                }
-
-                return response;
+               
             }
             catch (Exception e)
             {

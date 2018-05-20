@@ -45,7 +45,8 @@
                 @Html.DisplayFor(modelItem => item.ProductPrice)
             </td>
             <td>
-                <a onclick="DeleteCart('@ViewBag.CustomerID','@item.StoreID','@item.ProductID')">Delete</a>
+                @Html.ActionLink("Delete", "DeleteCart", "Customer", new { CustomerID = @ViewBag.CustomerID, StoreID = @item.StoreID, ProductID = @item.ProductID }, null)
+                @*<a onclick="DeleteCart('@ViewBag.CustomerID','@item.StoreID','@item.ProductID')">Delete</a>*@
             </td>
         </tr>
 }

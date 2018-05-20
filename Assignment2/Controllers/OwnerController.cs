@@ -80,6 +80,11 @@ namespace Assignment2.Controllers
         public IActionResult PutInventory(OwnerInventory ownerInventory)
         {
             try {
+                if (!ModelState.IsValid)
+                {
+                    throw new Exception("Invalid Input");
+                }
+
                 _context.Update(ownerInventory);
                 _context.SaveChanges();
 
